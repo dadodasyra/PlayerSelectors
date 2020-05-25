@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Ad5001\PlayerSelectors\selector;
 
 use pocketmine\command\CommandSender;
+use pocketmine\player\Player;
 use pocketmine\Server;
-use pocketmine\Player;
 
 class ClosestPlayer extends Selector{
     
@@ -36,12 +36,12 @@ class ClosestPlayer extends Selector{
         if(count($online) > 1){
             // Checking the closest player
             foreach($online as $p){
-                if($p->getLevel()->getName() == $sender->getLevel()->getName() &&
-                 (!isset($selectedP) || $p->distanceSquared($sender) < $selectorP->distanceSquared($sender))){
+                if($p->getWorld()->getDisplayName() == $sender->getWorld()->getDisplayName() &&
+                 (!isset($selectedP) || $p->getPosition()->distanceSquared($sender->getPosition()) < $selectedP->getPosition()->distanceSquared($sender->getPosition()))){
                     $selectedP = $p;
                 }
             }
-            return [$selectorP->getName()];
+            return [$selectedP->getName()];
         } else {
             // Otherwise, just return sender's name because there's no other player.
             return [$sender->getName()];

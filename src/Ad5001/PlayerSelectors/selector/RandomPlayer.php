@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Ad5001\PlayerSelectors\selector;
 
 use pocketmine\command\CommandSender;
+use pocketmine\player\Player;
 use pocketmine\Server;
-use pocketmine\Player;
-use pocketmine\level\Position;
 
 
 class RandomPlayer extends Selector{
@@ -26,15 +25,15 @@ class RandomPlayer extends Selector{
      */
     public function applySelector(CommandSender $sender, array $parameters = []): array{
         $defaultParams = Selector::DEFAULT_PARAMS;
-        if($sender instanceof Position){
-            $defaultParams["x"] = $sender->x;
-            $defaultParams["y"] = $sender->y;
-            $defaultParams["z"] = $sender->z;
+        if($sender instanceof Player){
+            $defaultParams["x"] = $sender->getPosition()->getX();
+            $defaultParams["y"] = $sender->getPosition()->getY();
+            $defaultParams["z"] = $sender->getPosition()->getZ();
         }
         $params = $parameters + $defaultParams;
         $possible = [];
         foreach(Server::getInstance()->getOnlinePlayers() as $p){
-            if($p->getLevel()->getName() !== $params["lvl"] && $params["lvl"] !== "") continue; // Not in the right level
+            if($p->getWorld()->getDisplayName() !== $params["lvl"] && $params["lvl"] !== "") continue; // Not in the right level
             if(!$this->checkDefaultParams($p, $params)) continue;
             $possible[] = $p;
         }

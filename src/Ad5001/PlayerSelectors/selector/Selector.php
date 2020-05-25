@@ -5,8 +5,8 @@ namespace Ad5001\PlayerSelectors\selector;
 
 use pocketmine\command\CommandSender;
 use pocketmine\entity\Entity;
-use pocketmine\Player;
 use pocketmine\math\Vector3;
+use pocketmine\player\Player;
 
 abstract class Selector {
     /**
@@ -103,15 +103,15 @@ abstract class Selector {
      * @return bool
      */
     public function checkDefaultParams(Entity $et, array $params): bool{ 
-        $dist = sqrt($et->distanceSquared(new Vector3($params["x"], $params["y"], $params["z"])));
+        $dist = sqrt($et->getPosition()->distanceSquared(new Vector3($params["x"], $params["y"], $params["z"])));
         if(($params["r"] !== 0 && $dist > $params["r"]) || $dist < $params["rm"]) return false; // Not in range
-        if($params["dx"] !== 0 && abs($et->x - $params["x"]) > $params["dx"]); // Not in x range
-        if($params["dy"] !== 0 && abs($et->y - $params["y"]) > $params["dy"]); // Not in y range
-        if($params["dz"] !== 0 && abs($et->z - $params["z"]) > $params["dz"]); // Not in z range
+        if($params["dx"] !== 0 && abs($et->getPosition()->getX() - $params["x"]) > $params["dx"]) return false; // Not in x range
+        if($params["dy"] !== 0 && abs($et->getPosition()->getY() - $params["y"]) > $params["dy"]) return false; // Not in y range
+        if($params["dz"] !== 0 && abs($et->getPosition()->getZ() - $params["z"]) > $params["dz"]) return false; // Not in z range
         if($params["m"] !== -1 && $et instanceof Player && $et->getGamemode() !== $params["m"]) return false; // Not in the right mode.
-        if($params["rx"] < $et->getPitch() || $et->getPitch() < $params["rxm"]) return false; // Not in range pitch
-        if($params["ry"] < $et->getYaw() || $et->getYaw() < $params["rym"]) return false; // Not in range yaw
-        if($et instanceof Player && ($et->getXpLevel() > $params["l"] || $et->getXpLevel() < $params["lm"])) return false; // Not in range XP
+        if($params["rx"] < $et->getLocation()->getPitch() || $et->getLocation()->getPitch() < $params["rxm"]) return false; // Not in range pitch
+        if($params["ry"] < $et->getLocation()->getYaw() || $et->getLocation()->getYaw() < $params["rym"]) return false; // Not in range yaw
+        if($et instanceof Player && ($et->getXpManager()->getXpLevel() > $params["l"] || $et->getXpManager()->getXpLevel() < $params["lm"])) return false; // Not in range XP
         if($params["name"] !== "" && (($et instanceof Player && $et->getDisplayName() !== $params["name"]) || 
             (!($et instanceof Player) && $et->getNameTag() !== $params["name"]))) return false; // Not selected name
         // Entity type

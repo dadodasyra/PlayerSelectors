@@ -3,13 +3,11 @@ declare(strict_types=1);
 
 namespace Ad5001\PlayerSelectors;
 
+use pocketmine\event\server\CommandEvent;
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
-use pocketmine\Player;
-use pocketmine\Server;
 use pocketmine\command\CommandSender;
 use pocketmine\event\player\PlayerCommandPreprocessEvent;
-use pocketmine\event\server\ServerCommandEvent;
 
 
 use Ad5001\PlayerSelectors\selector\Selector;
@@ -62,7 +60,7 @@ class Main extends PluginBase implements Listener {
      * @priority HIGHEST
      * @return void
      */
-    public function onServerCommand(ServerCommandEvent $event): void{
+    public function onServerCommand(CommandEvent $event): void{
         $m = $event->getCommand();
         if($this->execSelectors($m, $event->getSender())) $event->setCancelled();
     }
