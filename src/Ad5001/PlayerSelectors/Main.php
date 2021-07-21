@@ -3,20 +3,18 @@ declare(strict_types=1);
 
 namespace Ad5001\PlayerSelectors;
 
+use Ad5001\PlayerSelectors\selector\AllPlayers;
+use Ad5001\PlayerSelectors\selector\ClosestPlayer;
+use Ad5001\PlayerSelectors\selector\Entities;
+use Ad5001\PlayerSelectors\selector\RandomPlayer;
+use Ad5001\PlayerSelectors\selector\Selector;
+use Ad5001\PlayerSelectors\selector\SelfSelector;
+use Ad5001\PlayerSelectors\selector\WorldPlayers;
+use pocketmine\command\CommandSender;
+use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerCommandPreprocessEvent;
 use pocketmine\event\server\CommandEvent;
 use pocketmine\plugin\PluginBase;
-use pocketmine\event\Listener;
-use pocketmine\command\CommandSender;
-use pocketmine\event\player\PlayerCommandPreprocessEvent;
-
-
-use Ad5001\PlayerSelectors\selector\Selector;
-use Ad5001\PlayerSelectors\selector\ClosestPlayer;
-use Ad5001\PlayerSelectors\selector\AllPlayers;
-use Ad5001\PlayerSelectors\selector\RandomPlayer;
-use Ad5001\PlayerSelectors\selector\WorldPlayers;
-use Ad5001\PlayerSelectors\selector\Entities;
-use Ad5001\PlayerSelectors\selector\SelfSelector;
 
 
 class Main extends PluginBase implements Listener {
@@ -49,7 +47,7 @@ class Main extends PluginBase implements Listener {
      */
     public function onCommandPreProcess(PlayerCommandPreProcessEvent $event): void{
         $m = substr($event->getMessage(), 1);
-        if(substr($event->getMessage(), 0, 1) == "/" && $this->execSelectors($m, $event->getPlayer())) $event->setCancelled();
+        if(substr($event->getMessage(), 0, 1) == "/" && $this->execSelectors($m, $event->getPlayer())) $event->cancel();
     }
         
         
@@ -62,7 +60,7 @@ class Main extends PluginBase implements Listener {
      */
     public function onServerCommand(CommandEvent $event): void{
         $m = $event->getCommand();
-        if($this->execSelectors($m, $event->getSender())) $event->setCancelled();
+        if($this->execSelectors($m, $event->getSender())) $event->cancel();
     }
 
     /**
