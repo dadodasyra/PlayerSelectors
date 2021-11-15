@@ -47,17 +47,17 @@ class Main extends PluginBase implements Listener {
      */
     public function onCommandPreProcess(PlayerCommandPreProcessEvent $event): void{
         $m = substr($event->getMessage(), 1);
-        if(substr($event->getMessage(), 0, 1) == "/" && $this->execSelectors($m, $event->getPlayer())) $event->cancel();
+        if(str_starts_with($event->getMessage(), "/") && $this->execSelectors($m, $event->getPlayer())) $event->cancel();
     }
-        
-        
-    /**
-     * When a command is executed, check for selectors
-     *
-     * @param PlayerCommandPreProcessEvent $event
-     * @priority HIGHEST
-     * @return void
-     */
+
+
+	/**
+	 * When a command is executed, check for selectors
+	 *
+	 * @priority HIGHEST
+	 *
+	 * @param CommandEvent $event
+	 */
     public function onServerCommand(CommandEvent $event): void{
         $m = $event->getCommand();
         if($this->execSelectors($m, $event->getSender())) $event->cancel();
@@ -101,16 +101,18 @@ class Main extends PluginBase implements Listener {
         return true;
     }
 
-    /**
-     * Return all the params in an array form in a match.
-     *
-     * @param array $match
-     * @return void
-     */
+	/**
+	 * Return all the params in an array form in a match.
+	 *
+	 * @param array $match
+	 * @param int   $index
+	 *
+	 * @return array
+	 */
     public function checkArgParams(array $match, int $index): array{
         $params = [];
         if(strlen($match[2][$index]) !== 0){ // Is there any command parameter?
-            if(strpos($match[3][$index], ",") !== -1){ // Is there multiple arguments
+            if(str_contains($match[3][$index], ",")){ // Is there multiple arguments
                 foreach(explode(",", $match[3][$index]) as $param){
                     // Param here is in form argName=argproperty. 
                     // Parsing it to put it into the $params

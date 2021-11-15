@@ -34,6 +34,7 @@ class ClosestPlayer extends Selector{
         }
         // Player
         if(count($online) > 1){
+			$selectedP = null;
             // Checking the closest player
             foreach($online as $p){
                 if($p->getWorld()->getDisplayName() == $sender->getWorld()->getDisplayName() &&
