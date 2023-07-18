@@ -12,7 +12,6 @@ use Ad5001\PlayerSelectors\selector\SelfSelector;
 use Ad5001\PlayerSelectors\selector\WorldPlayers;
 use pocketmine\command\CommandSender;
 use pocketmine\event\Listener;
-use pocketmine\event\player\PlayerCommandPreprocessEvent;
 use pocketmine\event\server\CommandEvent;
 use pocketmine\plugin\PluginBase;
 
@@ -41,13 +40,11 @@ class Main extends PluginBase implements Listener {
     /**
      * When a command is executed, check for selectors
      *
-     * @param PlayerCommandPreProcessEvent $event
      * @priority HIGHEST
-     * @return void
      */
-    public function onCommandPreProcess(PlayerCommandPreProcessEvent $event): void{
-        $m = substr($event->getMessage(), 1);
-        if(str_starts_with($event->getMessage(), "/") && $this->execSelectors($m, $event->getPlayer())) $event->cancel();
+    public function onCommandEvent(CommandEvent $event): void{
+        $m = substr($event->getCommand(), 1);
+        if($this->execSelectors($m, $event->getSender())) $event->cancel(); // cancel event to prevent duplicate executions
     }
 
 
