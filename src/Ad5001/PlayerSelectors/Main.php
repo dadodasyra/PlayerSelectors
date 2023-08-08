@@ -43,7 +43,7 @@ class Main extends PluginBase implements Listener {
      * @priority HIGHEST
      */
     public function onCommandEvent(CommandEvent $event): void{
-        $m = substr($event->getCommand(), 1);
+        $m = $event->getCommand();
         if($this->execSelectors($m, $event->getSender())) $event->cancel(); // cancel event to prevent duplicate executions
     }
 
